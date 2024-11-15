@@ -10,8 +10,9 @@ import { Code, Clock, Lock, Loader2, CheckCircle2 } from 'lucide-react'
 
 export default function PlayerGamePage() {
   const params = useParams()
-  const gameId = params.gameId
+  const gameId = params?.gameId
 
+  // State variables
   const [question, setQuestion] = useState(null)
   const [selectedOption, setSelectedOption] = useState(null)
   const [locked, setLocked] = useState(false)
@@ -20,12 +21,13 @@ export default function PlayerGamePage() {
   const [gameStarted, setGameStarted] = useState(false)
   const [showWaitingScreen, setShowWaitingScreen] = useState(false)
 
+  // Initialize WebSocket connection
   useEffect(() => {
     if (gameId) {
       initializeWebSocket()
     }
   }, [gameId])
-  
+
   const initializeWebSocket = () => {
     const socketClient = new Client({
       brokerURL: 'ws://localhost:8080/ws',
@@ -34,21 +36,15 @@ export default function PlayerGamePage() {
         socketClient.subscribe(`/topic/game/${gameId}`, (message) => {
           const messageBody = JSON.parse(message.body)
           console.log("Received message:", messageBody)
-          
+
           if (messageBody.content === "Game has started.") {
             setGameStarted(true)
           } else if (messageBody.currentQuestion) {
             setQuestion(messageBody.currentQuestion)
-            setSelectedOption(null)
-            setLocked(false)
-            setTimeLeft(messageBody.currentQuestion.timeLimit || 30)
-            setShowWaitingScreen(false)
+            resetQuestionState(messageBody.currentQuestion.timeLimit || 30)
           } else if (messageBody.nextQuestion) {
             setQuestion(messageBody.nextQuestion)
-            setSelectedOption(null)
-            setLocked(false)
-            setTimeLeft(messageBody.nextQuestion.timeLimit || 30)
-            setShowWaitingScreen(false)
+            resetQuestionState(messageBody.nextQuestion.timeLimit || 30)
           }
         })
       },
@@ -57,6 +53,14 @@ export default function PlayerGamePage() {
     setClient(socketClient)
   }
 
+  const resetQuestionState = (timeLimit) => {
+    setSelectedOption(null)
+    setLocked(false)
+    setTimeLeft(timeLimit)
+    setShowWaitingScreen(false)
+  }
+
+  // Timer for the question
   useEffect(() => {
     if (question) {
       const timer = setInterval(() => {
@@ -87,17 +91,25 @@ export default function PlayerGamePage() {
 
       try {
         await axios.post('http://localhost:8080/api/playerAnswers/addPlayerAnswer', {
-          playerId: playerId,
-          gameId: gameId,
+          playerId,
+          gameId,
           questionId: question.id,
           answerOptionId: selectedOption,
-          timeTaken: timeTaken,
+          timeTaken,
         })
         setShowWaitingScreen(true)
       } catch (error) {
         console.error("Error sending answer:", error)
       }
     }
+  }
+
+  if (!gameId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-600 to-indigo-900 text-white">
+        <p className="text-xl font-semibold">Invalid game ID. Please check your link and try again.</p>
+      </div>
+    )
   }
 
   return (
