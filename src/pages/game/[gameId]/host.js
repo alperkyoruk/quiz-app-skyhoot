@@ -64,7 +64,7 @@ export default function HostGamePage() {
           if (messageBody.content === "Game has started.") {
             setGameStarted(true)
             fetchGameData()
-          } else if (messageBody.content.includes("has joined the game")) {
+          } else if (messageBody.content.includes("has joined the game.")) {
             updatePlayerList(messageBody.content)
           } else {
             handleNewQuestion(messageBody.content)
@@ -83,10 +83,7 @@ export default function HostGamePage() {
     const playerName = message.split(" ")[1]; // Extracts the player's name (assuming the format is "Player Alper has joined the game")
     
     setPlayers((prevPlayers) => {
-      if (!prevPlayers.includes(playerName)) {  // Prevent duplicates
-        return [...prevPlayers, playerName];
-      }
-      return prevPlayers;  // Avoid adding duplicate players
+      return [...prevPlayers, playerName]
     });
   };
 
