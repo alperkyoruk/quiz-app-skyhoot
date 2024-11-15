@@ -15,7 +15,7 @@ const AddQuestion = ({ setQuestions }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/questions/addQuestion',
+        'https://api.bin.net.tr:8081/api/questions/addQuestion',
         { question, timeLimit, score },
         { headers: { Authorization: `Bearer ${token}` } }
       );

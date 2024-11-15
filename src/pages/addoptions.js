@@ -10,7 +10,7 @@ const AddAnswerOption = ({ questionId }) => {
   const handleSubmit = async () => {
     try {
       await axios.post(
-        'http://localhost:8080/api/answerOptions/addAnswerOption',
+        'https://api.bin.net.tr:8081/api/answerOptions/addAnswerOption',
         { option, isCorrect, questionId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
