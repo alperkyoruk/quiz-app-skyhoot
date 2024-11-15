@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, X, Plus, Check } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { getToken } from './services/auth'
+import { getToken } from '../services/auth'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function GetQuestionsByHost() {

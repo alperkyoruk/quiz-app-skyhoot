@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getToken } from '@/pages/services/auth';
+import { getToken } from '@/services/auth';
 import { jwtDecode } from 'jwt-decode';
 
 export const useAuth = () => {

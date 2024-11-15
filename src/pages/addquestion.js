@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/hooks/useAuth';
-import { getToken } from './services/auth';
+import { getToken } from '../services/auth';
 
 const AddQuestion = ({ setQuestions }) => {
   const [question, setQuestion] = useState('');

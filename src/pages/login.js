@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { setToken } from './services/auth';
+import { setToken } from '../services/auth';
 import { useState, useEffect } from 'react';
 
 export default function Login() {

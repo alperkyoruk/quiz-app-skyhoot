@@ -7,7 +7,7 @@ import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 import { Code, Play, Users, Clock, ChevronRight, Award } from 'lucide-react'
 import GameLeaderboard from '@/components/GameLeaderboard'
-import { getToken } from '@/pages/services/auth'
+import { getToken } from '@/services/auth'
 import { useAuth } from '@/hooks/useAuth'
 
 

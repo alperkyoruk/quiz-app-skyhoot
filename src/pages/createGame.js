@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { getToken } from './services/auth'
+import { getToken } from '../services/auth'
 import { Code, ArrowLeft, Play, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

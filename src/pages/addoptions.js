@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { getToken } from './services/auth';
+import { getToken } from '../services/auth';
 
 const AddAnswerOption = ({ questionId }) => {
   const [option, setOption] = useState('');
