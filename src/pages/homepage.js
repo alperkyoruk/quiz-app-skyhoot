@@ -16,7 +16,7 @@ export default function Dashboard() {
 
   useEffect(() => {
 
-    const token = Cookies.get('token') // Assuming your JWT token is stored with the name 'token'
+    const token = Cookies.get('token') // Assuming your JWT token is stored with the name token
     
     if(!token){
       router.push('/login');
@@ -26,7 +26,7 @@ export default function Dashboard() {
     if (token) {
       try {
         const decoded = jwtDecode(token)
-        // Assuming the JWT contains a 'sub' field for the username
+        // Assuming the JWT contains a sub field for the username
         setUserName(decoded.sub)
       } catch (error) {
         console.error('Failed to decode JWT:', error)
