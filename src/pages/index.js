@@ -30,7 +30,7 @@ export default function Home() {
           <h3 className="text-3xl font-bold text-center mb-12">Why Choose Skyhoot?</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Code, title: "Expand Your Tech Knowledge", description: "Challenge yourself with quizzes covering a wide spectrum of computer science topics." },
+              { icon: Code, title: "Expand Your Tech Knowledge", description: " Challenge yourself with quizzes covering a wide spectrum of computer science topics." },
               { icon: Users, title: "Connect with Tech Enthusiasts", description: "Engage with fellow computer science aficionados and quiz masters worldwide." },
               { icon: Zap, title: "Real-time Excitement", description: "Experience the thrill of live quizzes with instant feedback and results." },
             ].map((feature, index) => (
@@ -79,7 +79,7 @@ export default function Home() {
               <p className="text-purple-200">Countries Represented</p>
             </div>
           </div>
-          <p className="text-xl mb-8">"Skyhoot has transformed learning into an exhilarating journey through the world of technology!"</p>
+          <p className="text-xl mb-8">&quot;Skyhoot has transformed learning into an exhilarating journey through the world of technology!&quot;</p>
           <p className="font-semibold">- SKY LAB Innovation Report</p>
         </section>
 

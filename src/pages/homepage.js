@@ -60,7 +60,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-semibold mb-6 flex items-center">
               <List className="mr-3" /> Your Questions
             </h2>
-            <p className="mb-6 text-lg">View and manage the questions you've created for Skyhoot quizzes.</p>
+            <p className="mb-6 text-lg">View and manage the questions you have created for Skyhoot quizzes.</p>
             <Link 
               href="/questionlist" 
               className="bg-yellow-400 text-indigo-900 px-6 py-3 rounded-full font-semibold hover:bg-yellow-300 transition duration-300 inline-flex items-center text-lg"

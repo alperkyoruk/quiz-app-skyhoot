@@ -164,7 +164,7 @@ export default function PlayerGamePage() {
           )
         ) : (
           <div className="w-full max-w-md bg-white bg-opacity-10 p-6 rounded-lg shadow-lg text-center backdrop-blur-sm">
-            <h1 className="text-3xl font-bold mb-4">You're In!</h1>
+            <h1 className="text-3xl font-bold mb-4">You are In!</h1>
             <p className="text-lg">Waiting for the host to start the game...</p>
             <Loader2 className="animate-spin h-8 w-8 mx-auto mt-4" />
           </div>
