@@ -20,6 +20,7 @@ export default function PlayerGamePage() {
   const [client, setClient] = useState(null)
   const [gameStarted, setGameStarted] = useState(false)
   const [showWaitingScreen, setShowWaitingScreen] = useState(false)
+  const [isLastQuestion, setIsLastQuestion] = useState(false)  // New state for last question check
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -41,10 +42,10 @@ export default function PlayerGamePage() {
             setGameStarted(true)
           } else if (messageBody.currentQuestion) {
             setQuestion(messageBody.currentQuestion)
-            resetQuestionState(messageBody.currentQuestion.timeLimit || 30)
+            resetQuestionState(messageBody.currentQuestion)
           } else if (messageBody.nextQuestion) {
             setQuestion(messageBody.nextQuestion)
-            resetQuestionState(messageBody.nextQuestion.timeLimit || 30)
+            resetQuestionState(messageBody.nextQuestion)
           }
         })
       },
@@ -53,11 +54,12 @@ export default function PlayerGamePage() {
     setClient(socketClient)
   }
 
-  const resetQuestionState = (timeLimit) => {
+  const resetQuestionState = (currentQuestion) => {
     setSelectedOption(null)
     setLocked(false)
-    setTimeLeft(timeLimit)
+    setTimeLeft(currentQuestion.timeLimit || 30)
     setShowWaitingScreen(false)
+    setIsLastQuestion(currentQuestion.sequenceNumber === currentQuestion.questionCount)  // Check if it's the last question
   }
 
   // Timer for the question
@@ -98,6 +100,11 @@ export default function PlayerGamePage() {
           timeTaken,
         })
         setShowWaitingScreen(true)
+
+        // If it's the last question, show the congratulations message
+        if (isLastQuestion) {
+          setShowWaitingScreen(true)
+        }
       } catch (error) {
         console.error("Error sending answer:", error)
       }
@@ -126,12 +133,20 @@ export default function PlayerGamePage() {
       <main className="container mx-auto px-4 py-8 flex flex-col items-center justify-center">
         {gameStarted ? (
           showWaitingScreen ? (
-            <div className="w-full max-w-md bg-white bg-opacity-10 p-6 rounded-lg shadow-lg text-center backdrop-blur-sm">
-              <CheckCircle2 className="h-16 w-16 mx-auto mb-4 text-yellow-400" />
-              <h2 className="text-2xl font-semibold mb-4">Answer Submitted!</h2>
-              <p className="text-lg">Waiting for the next question...</p>
-              <Loader2 className="animate-spin h-8 w-8 mx-auto mt-4" />
-            </div>
+            isLastQuestion ? (
+              <div className="w-full max-w-md bg-white bg-opacity-10 p-6 rounded-lg shadow-lg text-center backdrop-blur-sm">
+                <CheckCircle2 className="h-16 w-16 mx-auto mb-4 text-yellow-400" />
+                <h2 className="text-2xl font-semibold mb-4">Congratulations!</h2>
+                <p className="text-lg">Look at the screen for your score!</p>
+              </div>
+            ) : (
+              <div className="w-full max-w-md bg-white bg-opacity-10 p-6 rounded-lg shadow-lg text-center backdrop-blur-sm">
+                <CheckCircle2 className="h-16 w-16 mx-auto mb-4 text-yellow-400" />
+                <h2 className="text-2xl font-semibold mb-4">Answer Submitted!</h2>
+                <p className="text-lg">Waiting for the next question...</p>
+                <Loader2 className="animate-spin h-8 w-8 mx-auto mt-4" />
+              </div>
+            )
           ) : question ? (
             <div className="w-full max-w-md bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
               <h2 className="text-2xl font-semibold mb-4">{question.question}</h2>
@@ -184,8 +199,8 @@ export default function PlayerGamePage() {
       </main>
 
       <footer className="bg-indigo-900 py-4 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2023 Skyhoot by SKY LAB, Yildiz Technical University. All rights reserved.</p>
+        <div className="container mx-auto text-center text-white">
+          <p className="text-lg">&copy; 2024 Skyhoot - All rights reserved</p>
         </div>
       </footer>
     </div>
