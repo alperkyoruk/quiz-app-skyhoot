@@ -12,7 +12,7 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post('https:api.bin.net.tr:8081/api/register', data)
+      await axios.post('https:api.bin.net.tr:8081/api/users/addUser', data)
       router.push('/login')
     } catch (error) {
       console.error('Registration error', error)
