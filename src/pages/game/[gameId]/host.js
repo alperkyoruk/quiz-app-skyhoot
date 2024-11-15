@@ -60,6 +60,7 @@ export default function HostGamePage() {
 
         socketClient.subscribe(`/topic/game/${gameId}`, (message) => {
           const messageBody = JSON.parse(message.body)
+          console.log("Received message:", messageBody)
           if (messageBody.content === "Game has started.") {
             setGameStarted(true)
             fetchGameData()
