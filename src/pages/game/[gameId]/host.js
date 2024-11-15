@@ -257,37 +257,32 @@ export default function HostGamePage() {
                         <p className="text-lg mb-4">{currentQuestion?.question}</p>
                         <ul className="space-y-2">
                           {currentQuestion?.answerOptions?.map((option) => (
-                            <li key={option.id} className="bg-indigo-700 bg-opacity-50 rounded-lg p-2 text-center">
-                              {option.option}
+                            <li key={option} className="bg-indigo-700 bg-opacity-50 rounded-lg p-2">
+                              {option}
                             </li>
                           ))}
                         </ul>
-                        <div className="mt-4 flex items-center justify-center text-yellow-400">
-                          <Clock className="mr-2" />
-                          <span className="text-3xl font-bold">{timeLeft}</span>
-                        </div>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-8 flex justify-end">
+                <div className="mt-8 flex justify-center">
                   <button
+                    className="bg-indigo-600 px-6 py-2 rounded-lg text-white font-bold hover:bg-indigo-700 transition"
                     onClick={handleNextClick}
-                    disabled={!isNextQuestionReady}
-                    className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-semibold py-2 px-4 rounded-full flex items-center disabled:bg-yellow-600 disabled:text-indigo-800 transition duration-300"
                   >
-                    Next <ChevronRight className="ml-2" />
+                    {showLeaderboard ? 'Next Question' : 'Show Leaderboard'}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="text-center">
-                <button 
-                  onClick={startGame} 
-                  className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-semibold py-3 px-8 rounded-full flex items-center mx-auto transition duration-300"
+                <button
+                  className="bg-indigo-600 px-6 py-2 rounded-lg text-white font-bold hover:bg-indigo-700 transition"
+                  onClick={startGame}
                 >
-                  <Play className="mr-2" /> Start Game
+                  Start Game
                 </button>
               </div>
             )}
