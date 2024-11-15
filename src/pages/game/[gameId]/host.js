@@ -10,7 +10,6 @@ import GameLeaderboard from '@/components/GameLeaderboard'
 import { getToken } from '@/services/auth'
 import { useAuth } from '@/hooks/useAuth'
 
-
 export default function HostGamePage() {
   const params = useParams()
   const gameId = params.gameId
@@ -29,15 +28,15 @@ export default function HostGamePage() {
   const processingQuestion = useRef(false)
   const token = getToken()
 
-  
   useEffect(() => {
-    if (gameId) {
-      fetchGameDetails()
-      initializeWebSocket()
-    }
+    if (!gameId) return
+    fetchGameDetails()
+    initializeWebSocket()
   }, [gameId])
 
   const fetchGameDetails = async () => {
+    if (!gameId) return
+
     try {
       const response = await axios.get(`http://localhost:8080/api/games/getGameById?gameId=${gameId}`)
       const gameDetails = response.data.data
@@ -49,6 +48,8 @@ export default function HostGamePage() {
   }
 
   const initializeWebSocket = () => {
+    if (!gameId) return
+
     console.log("Initializing WebSocket connection...")
 
     const socketClient = new Client({
@@ -83,6 +84,8 @@ export default function HostGamePage() {
   }
 
   const fetchGameData = async () => {
+    if (!gameId) return
+
     try {
       const response = await axios.get(`http://localhost:8080/api/games/getGameStarted?gameId=${gameId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -124,6 +127,8 @@ export default function HostGamePage() {
   }
 
   const startGame = async () => {
+    if (!gameId) return
+
     try {
       await axios.post(`http://localhost:8080/api/games/startGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
@@ -134,6 +139,8 @@ export default function HostGamePage() {
   }
 
   const endGame = async () => {
+    if (!gameId) return
+
     try {
       await axios.post(`http://localhost:8080/api/games/endGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
@@ -143,20 +150,18 @@ export default function HostGamePage() {
     }
   }
 
-
   const sendNextQuestion = async () => {
+    if (!gameId) return
+
     try {
       const response = await axios.post(`http://localhost:8080/api/games/getNextQuestion?gameId=${gameId}`)
       if(response.data.data == null){
         setShowFinalLeaderboard(true)
-        //wait for 10 secs and finish the game sending a post request to the server
         setTimeout(() => {
           endGame()
         }, 10000)
-
       }
-      else
-      {
+      else {
         const questionData = response.data.data.currentQuestion
         handleNewQuestion(questionData)
       }
@@ -164,7 +169,7 @@ export default function HostGamePage() {
       console.error('Error fetching next question:', error)
     }
   }
-  
+
   const startTimer = () => {
     clearInterval(timerRef.current)
     timerRef.current = setInterval(() => {
