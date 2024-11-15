@@ -42,7 +42,7 @@ export default function PlayerGamePage() {
             setGameStarted(true)
           } else if (messageBody.currentQuestion) {
             setQuestion(messageBody.currentQuestion)
-            resetQuestionState(messageBody.currentQuestion)
+            resetQuestionState(messageBody)
           } else if (messageBody.nextQuestion) {
             setQuestion(messageBody.nextQuestion)
             resetQuestionState(messageBody.nextQuestion)
@@ -54,12 +54,12 @@ export default function PlayerGamePage() {
     setClient(socketClient)
   }
 
-  const resetQuestionState = (currentQuestion) => {
+  const resetQuestionState = (messageBody) => {
     setSelectedOption(null)
     setLocked(false)
-    setTimeLeft(currentQuestion.timeLimit || 30)
+    setTimeLeft(messageBody.currentQuestion.timeLimit || 30)
     setShowWaitingScreen(false)
-    setIsLastQuestion(currentQuestion.sequenceNumber === currentQuestion.questionCount)  // Check if it's the last question
+    setIsLastQuestion(messageBody.currentQuestion.sequenceNumber === messageBody.questionCount)  // Check if it's the last question
   }
 
   // Timer for the question
