@@ -72,7 +72,6 @@ export default function CreateGame() {
         headers: { Authorization: `Bearer ${token}` },
       })
       const gameId = response.data.data
-      alert('Game created successfully!')
       router.push(`/game/${gameId}/host`)
     } catch (error) {
       console.error('Error creating game:', error)

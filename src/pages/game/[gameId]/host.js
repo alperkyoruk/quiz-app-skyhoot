@@ -79,9 +79,15 @@ export default function HostGamePage() {
   }
 
   const updatePlayerList = (message) => {
-    const playerName = message.split(" ")[1]
-    setPlayers((prevPlayers) => [...prevPlayers, playerName])
-  }
+    const playerName = message.split(" ")[1]; // Extracts the player's name (assuming the format is "Player Alper has joined the game")
+    
+    setPlayers((prevPlayers) => {
+      if (!prevPlayers.includes(playerName)) {  // Prevent duplicates
+        return [...prevPlayers, playerName];
+      }
+      return prevPlayers;  // Avoid adding duplicate players
+    });
+  };
 
   const fetchGameData = async () => {
     if (!gameId) return

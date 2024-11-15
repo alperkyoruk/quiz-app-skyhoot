@@ -35,7 +35,6 @@ const JoinGame = () => {
           const playerResponse = await axios.post('https://api.bin.net.tr:8081/api/games/connectPlayer', createPlayerDto);
       
           if (playerResponse.status === 200) {
-            alert('Player has joined the game successfully');
             const playerId = playerResponse.data.playerId;
             Cookies.set('playerId', playerId, { expires: 1, secure: true, sameSite: 'Strict' }); // Store the player ID in a cookie
             router.push(`/game/${gameData.gameId}`); // Route to the game page
