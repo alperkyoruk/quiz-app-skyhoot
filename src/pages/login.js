@@ -1,24 +1,41 @@
-'use client'
+'use client';
 
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { setToken } from './services/auth';
+import { useState, useEffect } from 'react';
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/generateToken', data);
+      if (response.data.success === false) {
+        setErrorMessage(response.data.message); // Set error message to display
+        return;
+      }
+
       setToken(response.data.data);
       router.push('/homepage');
     } catch (error) {
-      console.error('Login error', error);
+      setErrorMessage('An error occurred during login. Please try again.');
     }
   };
+
+  // Automatically hide the notification after 5 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-600 to-indigo-900">
@@ -63,6 +80,12 @@ export default function Login() {
           </Link>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white p-4 rounded-md shadow-lg transition-opacity duration-300 ease-in-out">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }
