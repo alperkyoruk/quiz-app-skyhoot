@@ -12,10 +12,16 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post('/api/register', data)
-      router.push('/login')
+      // Post directly to the external API (https://api.bin.net.tr:8081/api/users/addUser)
+      const response = await axios.post('https://api.bin.net.tr:8081/api/users/addUser', data)
+
+      // After successful registration, redirect to login page
+      if (response.status === 200) {
+        router.push('/login')
+      }
     } catch (error) {
       console.error('Registration error', error)
+      // Handle error, you could show an error message to the user
     }
   }
 
