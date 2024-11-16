@@ -128,7 +128,9 @@ export default function HostGamePage() {
       const questionId = currentQuestion?.questionId
       if (!questionId) return
 
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`)
+      const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`,{},
+      { headers: { Authorization: `Bearer ${token}` } }
+      )
       if (response.data.success) {
         setAnswerCounts(response.data.data)
         setShowAnswerChart(true)
@@ -180,7 +182,9 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`)
+      const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`,{},{
+        headers: { Authorization: `Bearer ${token}` },
+      })
       if (response.data.data == null) {
         setShowFinalLeaderboard(true)
         setTimeout(() => {
