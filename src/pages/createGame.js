@@ -72,6 +72,7 @@ export default function CreateGame() {
         headers: { Authorization: `Bearer ${token}` },
       })
       const gameId = response.data.data
+      await new Promise((resolve) => setTimeout(resolve, 3000))
       router.push(`/game/${gameId}/host`)
     } catch (error) {
       console.error('Error creating game:', error)
