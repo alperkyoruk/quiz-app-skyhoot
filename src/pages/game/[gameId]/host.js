@@ -10,6 +10,10 @@ import GameLeaderboard from '@/components/GameLeaderboard'
 import { getToken } from '@/services/auth'
 import { useAuth } from '@/hooks/useAuth'
 
+// Import chart library
+import { Bar } from 'react-chartjs-2'
+import Chart from 'chart.js/auto'
+
 export default function HostGamePage() {
   const params = useParams()
   const gameId = params?.gameId
@@ -24,6 +28,8 @@ export default function HostGamePage() {
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [isNextQuestionReady, setIsNextQuestionReady] = useState(false)
   const [showFinalLeaderboard, setShowFinalLeaderboard] = useState(false)
+  const [showAnswerChart, setShowAnswerChart] = useState(false)
+  const [answerCounts, setAnswerCounts] = useState([])
   const timerRef = useRef(null)
   const processingQuestion = useRef(false)
   const token = getToken()
@@ -79,12 +85,9 @@ export default function HostGamePage() {
   }
 
   const updatePlayerList = (message) => {
-    const playerName = message.split(" ")[1]; // Extracts the player's name (assuming the format is "Player Alper has joined the game")
-    
-    setPlayers((prevPlayers) => {
-      return [...prevPlayers, playerName]
-    });
-  };
+    const playerName = message.split(" ")[1] // Extract player name
+    setPlayers((prevPlayers) => [...prevPlayers, playerName])
+  }
 
   const fetchGameData = async () => {
     if (!gameId) return
@@ -95,30 +98,50 @@ export default function HostGamePage() {
       })
       const gameData = response.data.data
       setGameData(gameData)
-      setCurrentQuestion(gameData.currentQuestion)
+      setCurrentQuestion({
+        ...gameData.currentQuestion,
+        questionId: gameData.currentQuestion.id,
+      })
     } catch (error) {
       console.error('Error fetching game data:', error)
     }
   }
 
   const handleNewQuestion = (questionData) => {
-    if(questionData == null){
+    if (questionData == null) {
       renderFinalLeaderboard()
     }
     setCurrentQuestion({
       question: questionData.question,
       answerOptions: questionData.answerOptions,
+      questionId: questionData.id,
     })
-    setCurrentQuestion(questionData)
     setTimeLeft(questionData.timeLimit || 30)
     startTimer()
     setShowLeaderboard(false)
+    setShowAnswerChart(false)
     setIsNextQuestionReady(false)
+  }
+
+  const fetchAnswerCounts = async () => {
+    try {
+      const questionId = currentQuestion?.questionId
+      if (!questionId) return
+
+      const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`)
+      if (response.data.success) {
+        setAnswerCounts(response.data.data)
+        setShowAnswerChart(true)
+      } else {
+        console.error('Failed to get answer counts:', response.data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching answer counts:', error)
+    }
   }
 
   const fetchLeaderboard = async () => {
     try {
-      clearInterval(timerRef.current)
       const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getLeaderboard?gameId=${gameId}`)
       setLeaderboard(response.data.data)
       setShowLeaderboard(true)
@@ -158,13 +181,12 @@ export default function HostGamePage() {
 
     try {
       const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`)
-      if(response.data.data == null){
+      if (response.data.data == null) {
         setShowFinalLeaderboard(true)
         setTimeout(() => {
           endGame()
         }, 10000)
-      }
-      else {
+      } else {
         const questionData = response.data.data.currentQuestion
         handleNewQuestion(questionData)
       }
@@ -179,7 +201,8 @@ export default function HostGamePage() {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(timerRef.current)
-          fetchLeaderboard()
+          // After time runs out, fetch answer counts
+          fetchAnswerCounts()
           return 0
         }
         return prevTime - 1
@@ -197,9 +220,25 @@ export default function HostGamePage() {
   const handleNextClick = () => {
     if (showLeaderboard) {
       sendNextQuestion()
-    } else {
+    } else if (showAnswerChart) {
       fetchLeaderboard()
+    } else {
+      // If time is still running, stop it and fetch answer counts
+      clearInterval(timerRef.current)
+      fetchAnswerCounts()
     }
+  }
+
+  // Prepare data for the chart
+  const chartData = {
+    labels: answerCounts.map((option) => option.option),
+    datasets: [
+      {
+        label: 'Number of Players',
+        data: answerCounts.map((option) => option.playerCount),
+        backgroundColor: 'rgba(75,192,192,0.6)',
+      },
+    ],
   }
 
   return (
@@ -240,7 +279,12 @@ export default function HostGamePage() {
                   </div>
 
                   <div>
-                    {showLeaderboard ? (
+                    {showAnswerChart ? (
+                      <div>
+                        <h2 className="text-xl font-semibold mb-4">Answer Breakdown:</h2>
+                        <Bar data={chartData} />
+                      </div>
+                    ) : showLeaderboard ? (
                       <div>
                         <h2 className="text-xl font-semibold mb-4 flex items-center">
                           <Award className="mr-2" /> Leaderboard:
@@ -277,17 +321,21 @@ export default function HostGamePage() {
                 <div className="mt-8 flex justify-end">
                   <button
                     onClick={handleNextClick}
-                    disabled={!isNextQuestionReady}
-                    className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-semibold py-2 px-4 rounded-full flex items-center disabled:bg-yellow-600 disabled:text-indigo-800 transition duration-300"
+                    className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-semibold py-2 px-4 rounded-full flex items-center transition duration-300"
                   >
-                    Next <ChevronRight className="ml-2" />
+                    {showLeaderboard
+                      ? 'Next Question'
+                      : showAnswerChart
+                      ? 'Show Leaderboard'
+                      : 'Show Answer Chart'}{' '}
+                    <ChevronRight className="ml-2" />
                   </button>
                 </div>
               </div>
             ) : (
               <div className="text-center">
-                <button 
-                  onClick={startGame} 
+                <button
+                  onClick={startGame}
                   className="bg-yellow-400 hover:bg-yellow-300 text-indigo-900 font-semibold py-3 px-8 rounded-full flex items-center mx-auto transition duration-300"
                 >
                   <Play className="mr-2" /> Start Game
