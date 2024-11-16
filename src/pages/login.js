@@ -21,6 +21,7 @@ export default function Login() {
       }
 
       setToken(response.data.data);
+      
       router.push('/homepage');
     } catch (error) {
       setErrorMessage('An error occurred during login. Please try again.');

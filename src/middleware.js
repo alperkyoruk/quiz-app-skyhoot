@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import { getToken } from './services/auth';
 
 const secret = process.env.JWT_SECRET; // replace with your actual JWT secret
 
 export function middleware(request) {
   // Get the token from the cookies
-  const token = request.cookies.get('token');
+  const token = getToken();
 
   // Check if the token exists, if it does, validate and decode it
   if (token) {
