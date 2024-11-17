@@ -232,7 +232,6 @@ export default function HostGamePage() {
       fetchAnswerCounts()
     }
   }
-
   // Prepare data for the chart
   const chartData = {
     labels: answerCounts.map((option) => option.option),
@@ -254,6 +253,9 @@ export default function HostGamePage() {
       y: {
         ticks: {
           color: 'white', // White text color
+          callback: function(value) {
+            return Number(value).toFixed(0); // Remove decimal points
+          },
         },
       },
     },
