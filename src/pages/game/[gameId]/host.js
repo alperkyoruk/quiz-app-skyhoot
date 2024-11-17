@@ -128,7 +128,7 @@ export default function HostGamePage() {
       const questionId = currentQuestion?.questionId
       if (!questionId) return
 
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getAnswerCounts?gameId=${gameId}&questionId=${questionId}`, {
+      const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
     
