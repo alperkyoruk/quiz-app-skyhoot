@@ -21,8 +21,6 @@ export default function Login() {
       }
 
       setToken(response.data.data);
-      //wait for 3 seconds before redirecting to homepage
-      await new Promise((resolve) => setTimeout(resolve, 3000));
       router.push('/homepage');
     } catch (error) {
       setErrorMessage('An error occurred during login. Please try again.');
