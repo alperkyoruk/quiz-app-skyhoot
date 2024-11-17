@@ -26,7 +26,6 @@ export default function HostGamePage() {
   const [players, setPlayers] = useState([])
   const [leaderboard, setLeaderboard] = useState([])
   const [showLeaderboard, setShowLeaderboard] = useState(false)
-  const [isNextQuestionReady, setIsNextQuestionReady] = useState(false)
   const [showFinalLeaderboard, setShowFinalLeaderboard] = useState(false)
   const [showAnswerChart, setShowAnswerChart] = useState(false)
   const [answerCounts, setAnswerCounts] = useState([])
@@ -120,7 +119,6 @@ export default function HostGamePage() {
     startTimer()
     setShowLeaderboard(false)
     setShowAnswerChart(false)
-    setIsNextQuestionReady(false)
   }
 
   const fetchAnswerCounts = async () => {
@@ -131,8 +129,7 @@ export default function HostGamePage() {
       const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-    
-      
+
       if (response.data.success) {
         setAnswerCounts(response.data.data)
         setShowAnswerChart(true)
@@ -149,8 +146,6 @@ export default function HostGamePage() {
       const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getLeaderboard?gameId=${gameId}`)
       setLeaderboard(response.data.data)
       setShowLeaderboard(true)
-      setIsNextQuestionReady(true)
-      processingQuestion.current = false
     } catch (error) {
       console.error('Error fetching leaderboard:', error)
     }
@@ -184,7 +179,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`,{},{
+      const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.data.data == null) {
@@ -225,8 +220,12 @@ export default function HostGamePage() {
 
   const handleNextClick = () => {
     if (showLeaderboard) {
+      // After leaderboard, go to next question
+      setShowLeaderboard(false)
       sendNextQuestion()
     } else if (showAnswerChart) {
+      // After chart, show leaderboard
+      setShowAnswerChart(false)
       fetchLeaderboard()
     } else {
       // If time is still running, stop it and fetch answer counts
@@ -234,6 +233,7 @@ export default function HostGamePage() {
       fetchAnswerCounts()
     }
   }
+
   // Prepare data for the chart
   const chartData = {
     labels: answerCounts.map((option) => option.option),
@@ -245,23 +245,24 @@ export default function HostGamePage() {
       },
     ],
   }
+
   const chartOptions = {
     scales: {
       x: {
         ticks: {
-          color: 'white', // Set x-axis labels to white
+          color: 'white',
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.2)', // Optional: lighter grid lines
+          color: 'rgba(255, 255, 255, 0.2)',
         },
       },
       y: {
         ticks: {
-          color: 'white', // Set y-axis labels to white
-          stepSize: 1,     // Ensure steps of 1
+          color: 'white',
+          stepSize: 1,
           beginAtZero: true,
           callback: function (value) {
-            return Math.floor(value); // Ensure integer values without decimal points
+            return Math.floor(value)
           },
         },
         grid: {
@@ -272,13 +273,13 @@ export default function HostGamePage() {
     plugins: {
       legend: {
         labels: {
-          color: 'white', // Set legend text to white
+          color: 'white',
         },
       },
       tooltip: {
         titleColor: 'white',
         bodyColor: 'white',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Tooltip background
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
       },
     },
   }
