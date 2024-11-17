@@ -247,23 +247,36 @@ export default function HostGamePage() {
     scales: {
       x: {
         ticks: {
-          color: 'white', // White text color
+          color: 'white', // Set x-axis labels to white
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.2)', // Optional: lighter grid lines
         },
       },
       y: {
         ticks: {
-          color: 'white', // White text color
-          callback: function(value) {
-            return Number(value).toFixed(0); // Remove decimal points
+          color: 'white', // Set y-axis labels to white
+          stepSize: 1,     // Ensure steps of 1
+          beginAtZero: true,
+          callback: function (value) {
+            return Math.floor(value); // Ensure integer values without decimal points
           },
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.2)',
         },
       },
     },
     plugins: {
       legend: {
         labels: {
-          color: 'white', // White text color
+          color: 'white', // Set legend text to white
         },
+      },
+      tooltip: {
+        titleColor: 'white',
+        bodyColor: 'white',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Tooltip background
       },
     },
   }
@@ -309,7 +322,7 @@ export default function HostGamePage() {
                     {showAnswerChart ? (
                       <div>
                         <h2 className="text-xl font-semibold mb-4">Answer Breakdown:</h2>
-                        <Bar data={chartData} />
+                        <Bar data={chartData} options={chartOptions} />
                       </div>
                     ) : showLeaderboard ? (
                       <div>
