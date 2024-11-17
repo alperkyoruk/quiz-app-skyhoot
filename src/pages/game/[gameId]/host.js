@@ -240,9 +240,30 @@ export default function HostGamePage() {
       {
         label: 'Number of Players',
         data: answerCounts.map((option) => option.playerCount),
-        backgroundColor: 'rgba(75,192,192,0.6)',
+        backgroundColor: 'rgba(255, 205, 86, 0.6)', // Yellow color
       },
     ],
+  }
+  const chartOptions = {
+    scales: {
+      x: {
+        ticks: {
+          color: 'white', // White text color
+        },
+      },
+      y: {
+        ticks: {
+          color: 'white', // White text color
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: 'white', // White text color
+        },
+      },
+    },
   }
 
   return (
