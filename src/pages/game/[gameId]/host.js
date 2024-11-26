@@ -71,9 +71,9 @@ export default function HostGamePage() {
           } else if (messageBody.content.includes("has joined the game.")) {
             updatePlayerList(messageBody.content)
           }
-          else if(messageBody?.content?.includes("kicked from the game.")){
-            const playerName = messageBody.content.split(" ")[1]
-            setPlayers((prevPlayers) => prevPlayers.filter((player) => player !== playerName))
+          else if (messageBody?.content?.includes("kicked from the game.")) {
+            const playerName = messageBody.content.split(" ")[1] // Adjusted split logic
+            setPlayers((prevPlayers) => prevPlayers?.filter((player) => player !== playerName))
           }
           
           else {
@@ -139,7 +139,7 @@ export default function HostGamePage() {
       if (response.data.success) {
         setAnswerCounts(response.data.data)
         setShowAnswerChart(true)
-      } else {
+      } else {  
         console.error('Failed to get answer counts:', response.data.message)
       }
     } catch (error) {
