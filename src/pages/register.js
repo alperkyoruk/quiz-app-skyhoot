@@ -12,8 +12,8 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
-      // Post directly to the external API (https://api.bin.net.tr:8081/api/users/addUser)
-      const response = await axios.post('https://api.bin.net.tr:8081/api/users/addUser', data)
+      // Post directly to the external API (https://api.skyhoot.yildizskylab.com/api/users/addUser)
+      const response = await axios.post('https://api.skyhoot.yildizskylab.com/api/users/addUser', data)
 
       // After successful registration, redirect to login page
       if (response.status === 200) {

@@ -17,7 +17,7 @@ const JoinGame = () => {
       
         try {
           // Fetch Game Details
-          const gameResponse = await axios.get(`https://api.bin.net.tr:8081/api/games/getGameId?gameCode=${gameCode}`);
+          const gameResponse = await axios.get(`https://api.skyhoot.yildizskylab.com/api/games/getGameId?gameCode=${gameCode}`);
       
           if (!gameResponse.data.success) {
             setErrorMessage('Failed to retrieve game details.');
@@ -32,7 +32,7 @@ const JoinGame = () => {
             gameCode: gameCode,
           };
       
-          const playerResponse = await axios.post('https://api.bin.net.tr:8081/api/games/connectPlayer', createPlayerDto);
+          const playerResponse = await axios.post('https://api.skyhoot.yildizskylab.com/api/games/connectPlayer', createPlayerDto);
       
           if (playerResponse.status === 200) {
             const playerId = playerResponse.data.playerId;

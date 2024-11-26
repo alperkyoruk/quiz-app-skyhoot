@@ -43,7 +43,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getGameById?gameId=${gameId}`)
+      const response = await axios.get(`https://api.skyhoot.yildizskylab.com/api/games/getGameById?gameId=${gameId}`)
       const gameDetails = response.data.data
       setGameData(gameDetails)
       setGameCode(gameDetails.gameCode)
@@ -59,7 +59,7 @@ export default function HostGamePage() {
 
     const socketClient = new Client({
       brokerURL: 'ws://localhost:8080/ws',
-      webSocketFactory: () => new SockJS('https://api.bin.net.tr:8081/ws'),
+      webSocketFactory: () => new SockJS('https://api.skyhoot.yildizskylab.com/ws'),
       onConnect: () => {
         console.log("Connected to WebSocket!")
 
@@ -70,7 +70,13 @@ export default function HostGamePage() {
             fetchGameData()
           } else if (messageBody.content.includes("has joined the game.")) {
             updatePlayerList(messageBody.content)
-          } else {
+          }
+          else if(messageBody.content.includes("kicked from the game.")){
+            const playerName = messageBody.content.split(" ")[1]
+            setPlayers((prevPlayers) => prevPlayers.filter((player) => player !== playerName))
+          }
+          
+          else {
             handleNewQuestion(messageBody.content)
           }
         })
@@ -92,7 +98,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getGameStarted?gameId=${gameId}`, {
+      const response = await axios.get(`https://api.skyhoot.yildizskylab.com/api/games/getGameStarted?gameId=${gameId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const gameData = response.data.data
@@ -126,7 +132,7 @@ export default function HostGamePage() {
       const questionId = currentQuestion?.questionId
       if (!questionId) return
 
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
+      const response = await axios.get(`https://api.skyhoot.yildizskylab.com/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -143,7 +149,7 @@ export default function HostGamePage() {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await axios.get(`https://api.bin.net.tr:8081/api/games/getLeaderboard?gameId=${gameId}`)
+      const response = await axios.get(`https://api.skyhoot.yildizskylab.com/api/games/getLeaderboard?gameId=${gameId}`)
       setLeaderboard(response.data.data)
       setShowLeaderboard(true)
     } catch (error) {
@@ -155,7 +161,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      await axios.post(`https://api.bin.net.tr:8081/api/games/startGame?gameId=${gameId}`, {}, {
+      await axios.post(`https://api.skyhoot.yildizskylab.com/api/games/startGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
     } catch (error) {
@@ -167,7 +173,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      await axios.post(`https://api.bin.net.tr:8081/api/games/endGame?gameId=${gameId}`, {}, {
+      await axios.post(`https://api.skyhoot.yildizskylab.com/api/games/endGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
     } catch (error) {
@@ -175,11 +181,24 @@ export default function HostGamePage() {
     }
   }
 
+  const kickPlayer = async (player) => {
+    if (!gameId) return
+
+    try {
+      await axios.post(`https://api.skyhoot.yildizskylab.com/api/players/kickPlayerByPlayerName?gameId=${gameId}&playerName=${player}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    } catch (error) {
+      console.error('Error kicking player:', error)
+    }
+    
+  }
+
   const sendNextQuestion = async () => {
     if (!gameId) return
 
     try {
-      const response = await axios.post(`https://api.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`, {}, {
+      const response = await axios.post(`https://api.skyhoot.yildizskylab.com/api/games/getNextQuestion?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.data.data == null) {
@@ -314,7 +333,7 @@ export default function HostGamePage() {
                     </h2>
                     <ul className="space-y-2">
                       {players.map((player, index) => (
-                        <li key={index} className="bg-indigo-700 bg-opacity-50 rounded-lg p-2 text-center">
+                        <li key={index} className="bg-indigo-700 bg-opacity-50 rounded-lg p-2 text-center" onClick={()=> kickPlayer(player)}>
                           {player}
                         </li>
                       ))}

@@ -10,7 +10,7 @@ const AddAnswerOption = ({ questionId }) => {
   const handleSubmit = async () => {
     try {
       await axios.post(
-        'https://api.bin.net.tr:8081/api/answerOptions/addAnswerOption',
+        'https://api.skyhoot.yildizskylab.com/api/answerOptions/addAnswerOption',
         { option, isCorrect, questionId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

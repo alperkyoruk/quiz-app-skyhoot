@@ -31,8 +31,8 @@ export default function PlayerGamePage() {
 
   const initializeWebSocket = () => {
     const socketClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
-      webSocketFactory: () => new SockJS('https://api.bin.net.tr:8081/ws'),
+      brokerURL: 'ws://api.skyhoot.yildizskylab.com/ws',
+      webSocketFactory: () => new SockJS('https://api.skyhoot.yildizskylab.com/ws'),
       onConnect: () => {
         socketClient.subscribe(`/topic/game/${gameId}`, (message) => {
           const messageBody = JSON.parse(message.body)
@@ -92,7 +92,7 @@ export default function PlayerGamePage() {
       const timeTaken = 30 - timeLeft
 
       try {
-        await axios.post('https://api.bin.net.tr:8081/api/playerAnswers/addPlayerAnswer', {
+        await axios.post('https://api.skyhoot.yildizskylab.com/api/playerAnswers/addPlayerAnswer', {
           playerId,
           gameId,
           questionId: question.id,
