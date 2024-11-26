@@ -71,7 +71,7 @@ export default function HostGamePage() {
           } else if (messageBody.content.includes("has joined the game.")) {
             updatePlayerList(messageBody.content)
           }
-          else if(messageBody.content.includes("kicked from the game.")){
+          else if(messageBody?.content?.includes("kicked from the game.")){
             const playerName = messageBody.content.split(" ")[1]
             setPlayers((prevPlayers) => prevPlayers.filter((player) => player !== playerName))
           }
@@ -331,13 +331,19 @@ export default function HostGamePage() {
                     <h2 className="text-xl font-semibold mb-4 flex items-center">
                       <Users className="mr-2" /> Players:
                     </h2>
+                    {players?.length > 0 && (
                     <ul className="space-y-2">
                       {players.map((player, index) => (
-                        <li key={index} className="bg-indigo-700 bg-opacity-50 rounded-lg p-2 text-center" onClick={()=> kickPlayer(player)}>
+                        <li
+                          key={index}
+                          className="bg-indigo-700 bg-opacity-50 rounded-lg p-2 text-center"
+                          onClick={() => kickPlayer(player)}
+                        >
                           {player}
                         </li>
                       ))}
                     </ul>
+                  )}
                   </div>
 
                   <div>
