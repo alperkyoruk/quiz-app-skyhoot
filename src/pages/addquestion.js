@@ -15,7 +15,7 @@ const AddQuestion = ({ setQuestions }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        'https://api.skyhoot.yildizskylab.com/api/questions/addQuestion',
+        'https://apiv1.bin.net.tr:8080/api/questions/addQuestion',
         { question, timeLimit, score },
         { headers: { Authorization: `Bearer ${token}` } }
       );

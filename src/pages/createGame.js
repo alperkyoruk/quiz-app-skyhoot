@@ -25,7 +25,7 @@ export default function CreateGame() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          'https://api.skyhoot.yildizskylab.com/api/questions/getQuestionsByHost',
+          'https://apiv1.bin.net.tr:8080/api/questions/getQuestionsByHost',
           { headers: { Authorization: `Bearer ${token}` } }
         )
         if (Array.isArray(response.data.data)) {
@@ -68,7 +68,7 @@ export default function CreateGame() {
     }
 
     try {
-      const response = await axios.post('https://api.skyhoot.yildizskylab.com/api/games/addGame', gameData, {
+      const response = await axios.post('https://apiv1.bin.net.tr:8080/api/games/addGame', gameData, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const gameId = response.data.data
