@@ -43,7 +43,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.get(`https://api.skyhoot.yildizskylab.com/api/games/getGameById?gameId=${gameId}`)
+      const response = await axios.get(`https://apiv1.bin.net.tr:8080/api/games/getGameById?gameId=${gameId}`)
       const gameDetails = response.data.data
       setGameData(gameDetails)
       setGameCode(gameDetails.gameCode)
@@ -198,7 +198,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.post(`https://api.skyhoot.yildizskylab.com/api/games/getNextQuestion?gameId=${gameId}`, {}, {
+      const response = await axios.post(`https://apiv1.bin.net.tr:8080/api/games/getNextQuestion?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.data.data == null) {
