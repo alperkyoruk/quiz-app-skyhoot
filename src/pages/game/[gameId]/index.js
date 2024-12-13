@@ -31,7 +31,7 @@ export default function PlayerGamePage() {
 
   const initializeWebSocket = () => {
     const socketClient = new Client({
-      brokerURL: 'ws://api.skyhoot.yildizskylab.com/ws',
+      brokerURL: 'ws://apiv1.bin.net.tr:8080/ws',
       webSocketFactory: () => new SockJS('https://apiv1.bin.net.tr:8080/ws'),
       onConnect: () => {
         socketClient.subscribe(`/topic/game/${gameId}`, (message) => {
