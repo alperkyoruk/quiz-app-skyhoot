@@ -14,7 +14,7 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://apiv1.bin.net.tr:8080/api/auth/generateToken', data);
+      const response = await axios.post('https://apiv1.bin.net.tr:8081/api/auth/generateToken', data);
       if (response.data.success === false) {
         setErrorMessage(response.data.message); // Set error message to display
         return;

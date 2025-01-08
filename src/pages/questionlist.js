@@ -31,7 +31,7 @@ export default function GetQuestionsByHost() {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          'https://apiv1.bin.net.tr:8080/api/questions/getQuestionsByHost',
+          'https://apiv1.bin.net.tr:8081/api/questions/getQuestionsByHost',
           { headers: { Authorization: `Bearer ${token}` } }
         )
         if (Array.isArray(response.data.data)) {
@@ -88,7 +88,7 @@ export default function GetQuestionsByHost() {
   const deleteQuestion = async (questionId) => {
     try {
       await axios.post(
-        `https://apiv1.bin.net.tr:8080/api/questions/deleteQuestion?questionId=${questionId}`,
+        `https://apiv1.bin.net.tr:8081/api/questions/deleteQuestion?questionId=${questionId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -107,7 +107,7 @@ export default function GetQuestionsByHost() {
   
     try {
       const questionResponse = await axios.post(
-        'https://apiv1.bin.net.tr:8080/api/questions/addQuestion',
+        'https://apiv1.bin.net.tr:8081/api/questions/addQuestion',
         {
           question: newQuestion.question,
           timeLimit: newQuestion.timeLimit,
@@ -120,7 +120,7 @@ export default function GetQuestionsByHost() {
   
       for (const option of newQuestion.answerOptions) {
         await axios.post(
-          'https://apiv1.bin.net.tr:8080/api/answerOptions/addAnswerOption',
+          'https://apiv1.bin.net.tr:8081/api/answerOptions/addAnswerOption',
           {
             option: option.option,
             isCorrect: option.isCorrect ? 1 : 0,

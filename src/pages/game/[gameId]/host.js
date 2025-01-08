@@ -43,7 +43,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.get(`https://apiv1.bin.net.tr:8080/api/games/getGameById?gameId=${gameId}`)
+      const response = await axios.get(`https://apiv1.bin.net.tr:8081/api/games/getGameById?gameId=${gameId}`)
       const gameDetails = response.data.data
       setGameData(gameDetails)
       setGameCode(gameDetails.gameCode)
@@ -58,8 +58,8 @@ export default function HostGamePage() {
     console.log("Initializing WebSocket connection...")
 
     const socketClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
-      webSocketFactory: () => new SockJS('https://apiv1.bin.net.tr:8080/ws'),
+      brokerURL: 'ws://localhost:8081/ws',
+      webSocketFactory: () => new SockJS('https://apiv1.bin.net.tr:8081/ws'),
       onConnect: () => {
         console.log("Connected to WebSocket!")
 
@@ -98,7 +98,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.get(`https://apiv1.bin.net.tr:8080/api/games/getGameStarted?gameId=${gameId}`, {
+      const response = await axios.get(`https://apiv1.bin.net.tr:8081/api/games/getGameStarted?gameId=${gameId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const gameData = response.data.data
@@ -132,7 +132,7 @@ export default function HostGamePage() {
       const questionId = currentQuestion?.questionId
       if (!questionId) return
 
-      const response = await axios.get(`https://apiv1.bin.net.tr:8080/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
+      const response = await axios.get(`https://apiv1.bin.net.tr:8081/api/answerOptions/getAnswerOptionsByQuestionId?questionId=${questionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -149,7 +149,7 @@ export default function HostGamePage() {
 
   const fetchLeaderboard = async () => {
     try {
-      const response = await axios.get(`https://apiv1.bin.net.tr:8080/api/games/getLeaderboard?gameId=${gameId}`)
+      const response = await axios.get(`https://apiv1.bin.net.tr:8081/api/games/getLeaderboard?gameId=${gameId}`)
       setLeaderboard(response.data.data)
       setShowLeaderboard(true)
     } catch (error) {
@@ -161,7 +161,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      await axios.post(`https://apiv1.bin.net.tr:8080/api/games/startGame?gameId=${gameId}`, {}, {
+      await axios.post(`https://apiv1.bin.net.tr:8081/api/games/startGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
     } catch (error) {
@@ -173,7 +173,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      await axios.post(`https://apiv1.bin.net.tr:8080/api/games/endGame?gameId=${gameId}`, {}, {
+      await axios.post(`https://apiv1.bin.net.tr:8081/api/games/endGame?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
     } catch (error) {
@@ -185,7 +185,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      await axios.post(`https://apiv1.bin.net.tr:8080/api/players/kickPlayerByPlayerName?gameId=${gameId}&playerName=${player}`, {}, {
+      await axios.post(`https://apiv1.bin.net.tr:8081/api/players/kickPlayerByPlayerName?gameId=${gameId}&playerName=${player}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
     } catch (error) {
@@ -198,7 +198,7 @@ export default function HostGamePage() {
     if (!gameId) return
 
     try {
-      const response = await axios.post(`https://apiv1.bin.net.tr:8080/api/games/getNextQuestion?gameId=${gameId}`, {}, {
+      const response = await axios.post(`https://apiv1.bin.net.tr:8081/api/games/getNextQuestion?gameId=${gameId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.data.data == null) {
